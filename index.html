@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta name="tridente-encrypted" content="1">
+  <meta name="tridente-static" content="1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#04070e">
+<title>TRIDENTE · Señales de los tres sistemas</title>
+<meta name="description" content="MAREA, VELA y METEORO: señales, carteras, rendimiento, riesgo y exposición combinada en tiempo real.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<!-- ══════════ TOPBAR ══════════ -->
+<header class="topbar">
+  <div class="brand">
+    <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="tg" x1="0" y1="0" x2="32" y2="32">
+          <stop offset="0%" stop-color="#35d0e6"/><stop offset="55%" stop-color="#45e0b0"/><stop offset="100%" stop-color="#b58cf0"/>
+        </linearGradient>
+      </defs>
+      <path d="M16 3.2v25.6" stroke="url(#tg)" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M16 6.4 8.6 12.4M16 6.4l7.4 6" stroke="url(#tg)" stroke-width="2" stroke-linecap="round" opacity=".65"/>
+      <path d="M16 6.2c-2.6 0-4.6 2-4.6 4.6M16 6.2c2.6 0 4.6 2 4.6 4.6" stroke="url(#tg)" stroke-width="2" stroke-linecap="round"/>
+      <path d="M6.6 22.2c2.2 3.2 5.6 5.2 9.4 5.2s7.2-2 9.4-5.2" stroke="url(#tg)" stroke-width="2.4" stroke-linecap="round"/>
+    </svg>
+    <div class="brand-txt">
+      <span class="brand-name">TRIDENTE</span>
+      <span class="brand-sub">sistemas sistemáticos</span>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <a href="#senales">Señales</a>
+    <a href="#cartera">Cartera</a>
+    <a href="#rendimiento">Rendimiento</a>
+    <a href="#riesgo">Riesgo</a>
+    <a href="#pesos">Pesos</a>
+    <a href="#radar">Radar</a>
+    <a href="#historial">Historial</a>
+  </nav>
+
+  <div class="top-right">
+    <div class="pill" id="status-pill"><span class="dot"></span><span id="status-txt">Cargando…</span></div>
+    <button class="btn" id="btn-refresh">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></svg>
+      Actualizar
+    </button>
+  </div>
+</header>
+
+<main>
+  <!-- ══════════ HERO ══════════ -->
+  <section class="hero" id="top">
+    <div class="hero-grid">
+      <div>
+        <div class="sec-kicker">Plataforma de señales · datos diarios</div>
+        <h1>Tres sistemas.<br><span class="grad">Una sola disciplina.</span></h1>
+        <p class="lead">
+          Asignación táctica mensual, momentum semanal e inercia de acciones.
+          Señales, carteras y riesgo calculados con datos ajustados de mercado y
+          actualizados en cada cierre.
+        </p>
+        <div class="hero-meta">
+          <div class="pill"><span class="dot"></span><span>Datos hasta <b id="data-date">—</b></span></div>
+          <label class="pill cap-pill" title="Importe total de la cartera (editable)">Capital
+            <input type="number" data-capital step="1000" min="1000" value="250000" aria-label="Capital de la cartera">
+            <span>€</span>
+          </label>
+          <div class="pill" id="period-pill">Histórico desde <b>—</b></div>
+        </div>
+      </div>
+      <div class="tri" id="hero-systems"></div>
+    </div>
+
+    <div class="kpis" id="kpis"></div>
+  </section>
+
+  <!-- ══════════ SEÑALES ══════════ -->
+  <section id="senales">
+    <div class="sec-head">
+      <div>
+        <div class="sec-kicker">01 · Señales del próximo periodo</div>
+        <h2 class="sec-title">Qué toca comprar, vender y mantener</h2>
+        <p class="sec-desc">Provisional con el último cierre disponible. Se consolida con el cierre del último día del
+          periodo en curso y se ejecuta al inicio del siguiente. Comparado con la cartera vigente.</p>
+      </div>
+    </div>
+    <div class="cards3" id="signal-cards"></div>
+  </section>
+
+  <!-- ══════════ CARTERA ══════════ -->
+  <section id="cartera">
+    <div class="sec-head">
+      <div>
+        <div class="sec-kicker">02 · Cartera vigente</div>
+        <h2 class="sec-title">Composición cerrada de cada sistema</h2>
+        <p class="sec-desc">Pesos decididos con el último cierre del periodo anterior y en vigor hasta el siguiente rebalanceo.</p>
+      </div>
+      <div class="toolbar"><div id="cartera-month" class="pill">—</div></div>
+    </div>
+    <div class="cards3" id="portfolio-cards"></div>
+  </section>
+
+  <!-- ══════════ RENDIMIENTO ══════════ -->
+  <section id="rendimiento">
+    <div class="sec-head">
+      <div>
+        <div class="sec-kicker">03 · Rendimiento</div>
+        <h2 class="sec-title">Curva de capital y años</h2>
+        <p class="sec-desc">Base 100 en el inicio común del histórico. Las series incluyen el mes en curso,
+          señalado con un círculo vacío (y con asterisco en las tablas); los estadísticos anualizados
+          —CAGR, volatilidad, Sharpe— se siguen midiendo sobre meses cerrados.<span id="prov-note"></span>
+          Pulsa cada sistema para mostrarlo u ocultarlo.</p>
+      </div>
+      <div class="toolbar">
+        <div class="seg" id="period-seg">
+          <button data-p="ytd">YTD</button>
+          <button data-p="1">1A</button>
+          <button data-p="3">3A</button>
+          <button data-p="5">5A</button>
+          <button data-p="all" class="on">Todo</button>
+        </div>
+        <button class="btn ghost on" data-serie="marea">MAREA</button>
+        <button class="btn ghost on" data-serie="pezvela">VELA</button>
+        <button class="btn ghost on" data-serie="meteoro">METEORO</button>
+        <button class="btn ghost on" data-serie="combined">TRIDENTE</button>
+        <button class="btn ghost on" data-serie="spy">S&amp;P 500</button>
+      </div>
+    </div>
+    <div class="panel"><div id="chart-equity"></div></div>
+
+    <div class="cards3" style="margin-top:18px;align-items:start">
+      <div class="panel" style="grid-column:span 2">
+        <div class="tabs" id="annual-tabs"></div>
+        <div class="table-wrap" id="annual-table"></div>
+      </div>
+      <div class="panel">
+        <div class="rowlbl">Rentabilidad por año natural</div>
+        <div class="table-wrap" id="annual-mini"></div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:18px">
+      <div class="sec-head" style="margin-bottom:14px">
+        <div><div class="rowlbl" style="margin:0">Calendario mensual</div></div>
+        <div class="tabs" id="cal-tabs"></div>
+      </div>
+      <div class="table-wrap" id="calendar"></div>
+    </div>
+  </section>
+
+  <!-- ══════════ RIESGO ══════════ -->
+  <section id="riesgo">
+    <div class="sec-head">
+      <div>
+        <div class="sec-kicker">04 · Riesgo y descorrelación</div>
+        <h2 class="sec-title">Métricas y matriz de correlación</h2>
+        <p class="sec-desc">Correlación de retornos mensuales sobre el histórico común. Cuanto más baja, mejor se complementan.</p>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="table-wrap" id="metrics-table"></div>
+    </div>
+    <div class="cards3" style="margin-top:18px;align-items:start">
+      <div class="panel">
+        <div class="rowlbl">Correlación mensual</div>
+        <div class="corr" id="corr-grid"></div>
+      </div>
+      <div class="panel" style="grid-column:span 2">
+        <div class="rowlbl">Caída desde máximos (drawdown)</div>
+        <div id="chart-dd"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ PESOS ══════════ -->
+  <section id="pesos">
+    <div class="sec-head">
+      <div>
+        <div class="sec-kicker">05 · Simulador de cartera</div>
+        <h2 class="sec-title">Peso de cada sistema y exposición real</h2>
+        <p class="sec-desc">Reparte el capital entre los tres sistemas y observa la exposición combinada ETF por ETF,
+          la liquidez implícita y el riesgo agregado de la <b>cartera objetivo</b> (las 12 posiciones de VELA y las 5 de METEORO de este periodo).</p>
+      </div>
+      <div class="toolbar">
+        <button class="btn ghost" data-preset="equal" title="Reparto fijo, sin mirar los datos.">Equiponderado</button>
+        <button class="btn ghost" data-preset="sharpe" title="Pesos ∝ sharpe × 30 (mínimo 1). Heurística, no optimización.">Máx. Sharpe</button>
+        <button class="btn ghost" data-preset="volpar" title="Pesos ∝ 1 / volatilidad anualizada. Es la antigua «Mín. volatilidad».">Paridad de volatilidad</button>
+      </div>
+    </div>
+    <div class="weights-grid">
+      <div class="panel">
+        <div class="rowlbl">Reparto entre sistemas</div>
+        <div id="sliders"></div>
+        <div class="toolbar" style="margin:6px 0 16px">
+          <span class="pill">Suma <b id="w-sum">100 %</b></span>
+          <label class="pill cap-pill" title="Importe total de la cartera (editable)">Capital
+            <input type="number" data-capital step="1000" min="1000" value="250000" aria-label="Capital de la cartera">
+            <span>€</span>
+          </label>
+        </div>
+        <div class="rowlbl">Cartera combinada resultante</div>
+        <div class="kpis" id="combo-kpis" style="margin:0"></div>
+        <div class="note" id="combo-note" style="margin-top:14px"></div>
+      </div>
+
+      <div class="panel">
+        <div class="rowlbl">Exposición por tipo de activo</div>
+        <div class="donut-wrap">
+          <svg class="donut" id="donut" viewBox="0 0 200 200"></svg>
+          <div class="legend" id="donut-legend"></div>
+        </div>
+        <div class="rowlbl" style="margin-top:20px">Posiciones combinadas</div>
+        <div class="table-wrap" id="exposure-table" style="max-height:330px;overflow:auto"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ RADAR ══════════ -->
+  <section id="radar">
+    <div class="sec-head">
+      <div>
+        <div class="sec-kicker">06 · Radar de candidatos</div>
+        <h2 class="sec-title">Rankings de los sistemas de acciones</h2>
+        <p class="sec-desc">VELA ordena los cruces del RSC de Mansfield de esta semana; METEORO, la inercia ajustada dentro del S&P 500 y el Nasdaq 100.</p>
+      </div>
+      <div class="tabs" id="radar-tabs">
+        <button class="tab on" data-radar="pezvela">VELA</button>
+        <button class="tab" data-radar="meteoro">METEORO</button>
+      </div>
+    </div>
+    <div class="panel"><div class="table-wrap" id="radar-table"></div></div>
+  </section>
+
+  <!-- ══════════ HISTORIAL ══════════ -->
+  <section id="historial">
+    <div class="sec-head">
+      <div>
+        <div class="sec-kicker">07 · Historial</div>
+        <h2 class="sec-title">Últimos 12 rebalanceos</h2>
+        <p class="sec-desc">Qué llevó cada sistema, qué compró y vendió y cuánto ganó cada mes.</p>
+      </div>
+      <div class="tabs" id="hist-tabs">
+        <button class="tab on" data-hist="marea">MAREA</button>
+        <button class="tab" data-hist="meteoro">METEORO</button>
+      </div>
+    </div>
+    <div class="panel"><div class="table-wrap" id="history-table"></div></div>
+  </section>
+
+  <!-- ══════════ FOOTER ══════════ -->
+  <footer>
+    <div class="foot-grid">
+      <div>
+        <h4>Metodología</h4>
+        <p><b>MAREA</b> agrega diez sub-estrategias tácticas sobre 21 ETFs (DAA, VAA, ROC6, Accel,
+          Composite, Quint, BAA, Descorr, HAA y RetCorr; ROC6 = los 6 mejores ROC de 6 meses… hasta
+          7 posiciones). Rebalanceo mensual al cierre. Regla de reversión a la media: si el
+          <b>acumulado de los tres últimos cierres mensuales</b> es <b>≥ +10 %</b> —una subida, no una
+          caída: tras un trimestre fuerte se espera que el mercado devuelva parte del tramo—, el mes
+          siguiente el libro va a 100 % BIL y los diez modelos quedan desactivados.</p>
+        <p><b>VELA</b> entra <b>sólo el día en que el RSC de Mansfield cruza a positivo</b> (con el último cierre
+          disponible de la semana), exige al valor sobre su SMA de 40 semanas y que el SPY semanal esté también
+          por encima de la suya —con el filtro apagado <b>no se abre nada nuevo, pero lo abierto se mantiene</b>
+          hasta su propia señal de salida—, y aplica un filtro estricto de calidad 6/6 a la lista corta <b>como
+          requisito de entrada</b>. Sólo valores de EE. UU., <b>12 posiciones de 1/12 del capital</b> cada una;
+          los huecos que no cumplen el 6/6 quedan en <b>BIL</b> (la caja cobra su interés). La señal se calcula
+          con el cierre del viernes y <b>se ejecuta a la apertura del lunes</b> (el siguiente día con sesión):
+          ése es el precio de entrada y desde ahí se mide el stop del 15 %.</p>
+        <p><b>METEORO</b> puntúa la inercia <i>(ROC de 10 meses × 0,6) / ((ATR14/SMA14 mensual) × 0,4)</i> con corte
+          en 680 y ordena por ese score dividido por el ATR; alterna esa fuente con Mansfield semanal. Exige
+          R²(252 d) &gt; 0,60 y RSI &lt; 85, y dimensiona con Kelly inverso a volatilidad entre el 10 % y el 30 %:
+          el remanente y el refugio van al <b>mejor de IEF/BIL/SHY por momentum de 12 meses</b>. Su universo son
+          <b>sólo los valores que pertenecían al S&amp;P 500 o al Nasdaq 100 en el cierre de ese mes</b>
+          (composición histórica, no la de hoy). Las cinco posiciones <b>alternan la fuente</b>: una por inercia
+          ajustada (IA), una por Mansfield semanal (M), y así sucesivamente. Régimen: con el ROC12 del S&amp;P 500
+          negativo el libro pasa a refugio al completo. Contabilidad unitizada (NAV/TWR).</p>
+      </div>
+      <div>
+        <h4>Datos y motor</h4>
+        <p id="what-analysed" style="font-weight:600">Análisis · —</p>
+        <p id="health-block">—</p>
+        <p>Precios ajustados por dividendos y splits vía Yahoo Finance. Descarga por lotes con caché en disco y
+          refresco incremental: sólo se piden los días nuevos.</p>
+      </div>
+      <div>
+        <h4>Aviso</h4>
+        <p>Backtests con precios ajustados y <b>10 pb de coste por operación</b> sobre el turnover unilateral
+          (Σ|Δw|/2), los tres igual: MAREA y METEORO ejecutan al cierre del mes y VELA a la apertura del lunes
+          siguiente. VELA y METEORO arrancan en <b>enero de 2016</b> para no contar el año de warm-up que exige
+          su propio histórico (52 semanas de RSC y 14 meses de inercia/R²): empezar antes sólo añadiría meses de
+          cartera vacía que diluyen las métricas. METEORO usa la composición histórica de los índices mes a mes
+          y ambos sistemas incluyen los valores que después salieron del índice o dejaron de cotizar; de los 825
+          que alguna vez pertenecieron al S&amp;P 500 o al Nasdaq 100, Yahoo conserva precios útiles de 64, y eso
+          es lo que el backtest puede comprar y ver morir (2,6 % de las posiciones de METEORO y 6,3 % de las
+          entradas de VELA). Quedan limitaciones reales: tickers reutilizados por otra empresa y cobertura del
+          Nasdaq 100 desde 2015. VELA y METEORO operan
+          exclusivamente con valores de EE. UU. Los meses recientes pueden diferir de los informes enviados en
+          su día por errores del proveedor de datos. No es asesoramiento financiero.</p>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>TRIDENTE · MAREA · VELA · METEORO</span>
+      <span id="foot-stamp">—</span>
+    </div>
+  </footer>
+</main>
+
+<div id="login" hidden>
+  <form class="login-box" id="login-form" autocomplete="on">
+    <img class="login-mark" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Ccircle cx='24' cy='24' r='21' fill='none' stroke='%2345e0b0' stroke-width='3'/%3E%3Cpath d='M24 5v38M7 18l17 8 17-8' fill='none' stroke='%2335d0e6' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E" alt="">
+    <div class="login-title">TRIDENTE</div>
+    <div class="login-sub">Acceso privado · introduce la contraseña</div>
+    <input type="password" id="login-pass" placeholder="Contraseña" autocomplete="current-password" required>
+    <label class="login-remember"><input type="checkbox" id="login-remember"> Recordarme en este dispositivo</label>
+    <button type="submit" class="login-btn" id="login-btn">Entrar</button>
+    <div class="login-err" id="login-err"></div>
+  </form>
+</div>
+
+<div id="boot">
+  <div class="boot-box">
+    <div class="spin"></div>
+    <div class="boot-title">TRIDENTE</div>
+    <div class="boot-msg" id="boot-msg">Conectando con el motor de datos…</div>
+    <div class="boot-bar"><i></i></div>
+  </div>
+</div>
+
+<script src="plotly.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
